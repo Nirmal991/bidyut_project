@@ -12,7 +12,12 @@ import routes from "./routes";
 
 const api = e();
 api.disable("etag");
-api.use(cors());
+api.use(
+  cors({
+    origin: process.env.CORS_ORIGIN, 
+    credentials: true,               
+  })
+);
 api.use(
   helmet({
     contentSecurityPolicy: false,
