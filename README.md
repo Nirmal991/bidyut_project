@@ -400,3 +400,127 @@ POST /api/users/logout
 ---
 
 
+# Get Current User API
+
+## 📌 Endpoint
+
+`GET /api/users/current-profile`
+
+---
+
+## 📝 Description
+
+This endpoint returns the **currently authenticated user's profile details**.
+
+It extracts the user information from the JWT token via middleware and sends it back in the response.
+
+> 🔐 This is a **protected route** and requires a valid access token.
+
+---
+
+## 🔑 Authentication
+
+This endpoint requires authentication via:
+
+### Option 1: Cookies
+
+* `accessToken` (HTTP-only cookie)
+
+### Option 2: Authorization Header
+
+```http id="k91sd8"
+Authorization: Bearer <accessToken>
+```
+
+---
+
+## 📥 Request
+
+### Headers (if not using cookies)
+
+```http id="plm4x2"
+Authorization: Bearer <accessToken>
+```
+
+### Body
+
+❌ No request body required
+
+---
+
+## 📤 Response
+
+### ✅ Success (200 OK)
+
+```json id="d8s2la"
+{
+  "statusCode": 200,
+  "data": {
+    "_id": "user_id",
+    "username": "john_doe",
+    "email": "john@example.com",
+    "profileImage": "optional_url",
+    "createdAt": "timestamp",
+    "updatedAt": "timestamp"
+  },
+  "message": "current user fetched successfully"
+}
+```
+
+---
+
+## ❌ Error Responses
+
+### 401 Unauthorized
+
+```json id="2k9sdf"
+{
+  "success": false,
+  "message": "unauthorized request",
+  "errors": []
+}
+```
+
+---
+
+### 500 Internal Server Error
+
+```json id="8dk3ms"
+{
+  "success": false,
+  "message": "Internal Server Error",
+  "errors": []
+}
+```
+
+---
+
+## 🔄 Flow
+
+1. Client sends request to `/api/users/current-profile`
+2. Middleware (`verifyJWT`) validates the access token
+3. User is extracted and attached to `req.user`
+4. Controller returns the user data
+5. Response is sent back to client
+
+---
+
+## 📁 Route Setup
+
+```ts id="m8dk29"
+router.route('/current-profile').get(verifyJWT, getCurrentUser);
+```
+
+---
+
+## ⚠️ Notes
+
+* User must be authenticated to access this endpoint
+* Password and sensitive fields are excluded in middleware
+* Uses JWT-based authentication
+* Relies on `req.user` set by `verifyJWT` middleware
+
+---
+
+
+
