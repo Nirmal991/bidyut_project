@@ -13,7 +13,6 @@ import { setUser } from "../../store/slices/AuthSlice";
 function LoginUserForm() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [serverError, setServerError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const {
         register,
@@ -27,7 +26,6 @@ function LoginUserForm() {
     const onSubmit = async (data: LoginUserFormData) => {
         try {
             setLoading(true);
-            setServerError(null);
 
             const response = await loginUser(data);
             dispatch(setUser(response.data.user));
@@ -35,7 +33,6 @@ function LoginUserForm() {
             reset();
             navigate("/");
         } catch (error: any) {
-            setServerError(error.message);
             toast.error(error.message);
         } finally {
             setLoading(false);

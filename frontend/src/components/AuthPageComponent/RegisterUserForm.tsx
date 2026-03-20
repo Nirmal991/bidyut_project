@@ -12,7 +12,6 @@ import Spinner from "../General/Spinner";
 function RegisterUserForm() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [serverError, setServerError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
 
     const {
@@ -27,7 +26,6 @@ function RegisterUserForm() {
     const onSubmit = async (data: RegisterUserFormData) => {
         try {
             setLoading(true);
-            setServerError(null);
 
             const response = await registerUser(data);
             dispatch(setUser(response.data.user));
@@ -35,7 +33,6 @@ function RegisterUserForm() {
             reset();
             navigate("/");
         } catch (error: any) {
-            setServerError(error.message);
             toast.error(error.message);
         } finally {
             setLoading(false);

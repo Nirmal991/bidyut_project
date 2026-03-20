@@ -3,8 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import { getCurrentUser } from './api/auth.api';
 import './App.css';
 import { setAuthLoad, setUser, logout } from './store/slices/AuthSlice';
-import type { RootState } from './store/store';
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch} from "react-redux";
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
@@ -13,7 +12,6 @@ import ProtectedRoute from './routes/ProtectedRoute';
 
 function App() {
   const dispatch = useDispatch();
-  const user = useSelector((state: RootState) => state.auth.user);
 
   useEffect(() => {
     const loadUser = async () => {
