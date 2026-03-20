@@ -1,4 +1,3 @@
-import React from 'react'
 import LoginUserForm from '../components/AuthPageComponent/LoginUserForm'
 
 function LoginPage() {
