@@ -244,3 +244,159 @@ app.use('/api/users', userRouter);
 
 ---
 
+
+# User Logout API
+
+## 📌 Endpoint
+
+`GET /api/users/logout`
+
+---
+
+## 📝 Description
+
+This endpoint logs out the currently authenticated user by:
+
+* Removing the stored **refresh token** from the database
+* Clearing authentication cookies (**accessToken** and **refreshToken**)
+* Invalidating the user's session
+
+> 🔐 This is a **protected route** and requires a valid access token.
+
+---
+
+## 🔑 Authentication
+
+This endpoint requires authentication via:
+
+### Option 1: Cookies
+
+* `accessToken` (HTTP-only cookie)
+
+### Option 2: Authorization Header
+
+```http
+Authorization: Bearer <accessToken>
+```
+
+---
+
+## 📥 Request
+
+### Headers (if not using cookies)
+
+```http
+Authorization: Bearer <accessToken>
+```
+
+### Body
+
+❌ No request body required
+
+---
+
+## 🍪 Cookies Cleared
+
+| Cookie Name  | Description       |
+| ------------ | ----------------- |
+| accessToken  | JWT access token  |
+| refreshToken | JWT refresh token |
+
+Cookies are cleared with:
+
+* `httpOnly: true`
+* `secure: true`
+
+---
+
+## 📤 Response
+
+### ✅ Success (200 OK)
+
+```json id="s9f2kd"
+{
+  "statusCode": 200,
+  "data": null,
+  "message": "user logged out successfully"
+}
+```
+
+---
+
+## ❌ Error Responses
+
+### 401 Unauthorized
+
+```json id="j3k2lm"
+{
+  "success": false,
+  "message": "unauthorized request",
+  "errors": []
+}
+```
+
+---
+
+### 500 Internal Server Error
+
+```json id="x92lpa"
+{
+  "success": false,
+  "message": "Something went wrong while logout",
+  "errors": []
+}
+```
+
+OR
+
+```json id="k29sdf"
+{
+  "success": false,
+  "message": "Internal Server Error",
+  "errors": []
+}
+```
+
+---
+
+## 🔄 Logout Flow
+
+1. Client sends request to `/api/users/logout`
+2. Middleware (`verifyJWT`) verifies access token
+3. Server extracts user from token
+4. Refresh token is removed from database
+5. Cookies are cleared from client
+6. Success response is returned
+
+---
+
+## 📁 Route Setup
+
+```ts id="92lsjd"
+router.route('/logout').get(verifyJWT, logoutUser);
+```
+
+---
+
+## ⚠️ Notes
+
+* User must be authenticated before calling this endpoint
+* Refresh token is removed using `$unset` from database
+* Cookies are **httpOnly**, so they cannot be accessed via JavaScript
+* `secure: true` means cookies only work over HTTPS
+
+---
+
+## 🚀 Best Practice Suggestion
+
+Instead of `GET`, consider using:
+
+```http
+POST /api/users/logout
+```
+
+👉 Because logout changes server state (REST principle)
+
+---
+
+
